@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""Launch an iris quadcopter, marker0, and rover in Gazebo and Rviz."""
+"""Launch an iris quadcopter, ArUco markers, and rover in Gazebo and Rviz."""
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
@@ -31,7 +31,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    """Generate a launch description for a simulation with iris, marker0, and rover."""
+    """Generate a launch description for a simulation with iris, ArUco markers, and rover."""
     pkg_project_bringup = get_package_share_directory("ardupilot_gz_bringup")
     pkg_project_gazebo = get_package_share_directory("ardupilot_gz_gazebo")
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
@@ -51,23 +51,6 @@ def generate_launch_description():
             ]
         )
     )
-
-    # Rover (Wild Thumper)
-    # rover = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         [
-    #             PathJoinSubstitution(
-    #                 [
-    #                     FindPackageShare("ardupilot_gz_bringup"),
-    #                     "launch",
-    #                     "robots",
-    #                     "wildthumper.launch.py",
-    #                 ]
-    #             ),
-    #         ]
-    #     ),
-    #     # Optional: Add launch arguments to customize rover position, etc.
-    # )
 
     # Gazebo.
     gz_sim_server = IncludeLaunchDescription(
@@ -103,7 +86,6 @@ def generate_launch_description():
             gz_sim_server,
             gz_sim_gui,
             iris,
-            # rover,
             rviz,
         ]
     )

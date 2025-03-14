@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version="1.9">
-  <model name="aruco_marker">
+  <model name="aruco_marker_circle">
     <static>false</static>
     <link name="link">
       <inertial>
@@ -39,13 +39,13 @@
       </collision>
     </link>
 
-    <!-- Pattern Movement Plugin -->
+    <!-- Pattern Movement Plugin - Circular Motion -->
     <plugin
       filename="PatternMovementPlugin"
       name="gz::sim::PatternMovementPlugin">
       <pattern>circle</pattern>
       <linear_velocity>0.5</linear_velocity>
-      <radius>1.0</radius>
+      <radius>1.5</radius>
     </plugin>
   </model>
 </sdf>

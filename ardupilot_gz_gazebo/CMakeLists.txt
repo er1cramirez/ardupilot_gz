@@ -36,6 +36,20 @@ endif()
 # --------------------------------------------------------------------------- #
 #  Build.
 
+# Add this to the existing CMakeLists.txt
+add_library(PatternMovementPlugin
+  SHARED
+  src/PatternMovementPlugin.cc
+)
+
+target_include_directories(
+  PatternMovementPlugin PRIVATE include
+)
+
+target_link_libraries(PatternMovementPlugin PRIVATE
+  gz-sim${GZ_SIM_VER}::gz-sim${GZ_SIM_VER})
+
+
 add_library(BasicSystem
   SHARED
   src/BasicSystem.cc
@@ -71,6 +85,11 @@ install(
 install(
   DIRECTORY worlds/
   DESTINATION share/${PROJECT_NAME}/worlds
+)
+
+install(
+  TARGETS PatternMovementPlugin
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 # --------------------------------------------------------------------------- #

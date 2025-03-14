@@ -76,24 +76,37 @@
     <!-- Include Iris Quadcopter -->
     <include>
       <uri>model://iris_with_gimbal</uri>
-      <name>iris</name>
+      <n>iris</n>
       <pose degrees="true">0 0 0.195 0 0 90</pose>
     </include>
 
-    <!-- Include ArUco Marker -->
+    <!-- Include ArUco Marker with Linear Movement -->
     <include>
-      <uri>model://marker0</uri>
-      <name>marker0</name>
-      <pose>5 0 0.01 0 0 0</pose> <!-- Place 5m in front of the iris -->
+      <uri>model://aruco_marker_line</uri>
+      <n>aruco_marker_line</n>
+      <pose>5 0 0.01 0 0 0</pose> <!-- 5m in front of the iris -->
     </include>
 
-    <!-- Temporarily deactivated Rover (WildThumper)
+    <!-- Include ArUco Marker with Circular Movement -->
+    <include>
+      <uri>model://aruco_marker_circle</uri>
+      <n>aruco_marker_circle</n>
+      <pose>-3 3 0.01 0 0 0</pose> <!-- 3m to the left and 3m behind of the iris -->
+    </include>
+
+    <!-- Include ArUco Marker with Infinity (Figure-8) Movement -->
+    <include>
+      <uri>model://aruco_marker_infinity</uri>
+      <n>aruco_marker_infinity</n>
+      <pose>0 -5 0.01 0 0 0</pose> <!-- 5m to the right of the iris -->
+    </include>
+
+    <!-- Include Rover (WildThumper) -->
     <include>
       <uri>model://wildthumper_with_lidar</uri>
-      <name>wildthumper</name>
-      <pose>3 3 0.15 0 0 0</pose>
+      <n>wildthumper</n>
+      <pose>3 3 0.15 0 0 0</pose> <!-- 3m away from origin at an angle -->
     </include>
-    -->
 
   </world>
 </sdf>
