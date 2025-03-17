@@ -83,8 +83,13 @@ class PatternMovementPlugin
       this->initialPose = pose->Data();
       gzmsg << "Initial pose: " << this->initialPose << std::endl;
     }
+    else {
+      gzerr << "Failed to get initial pose for model [" << this->modelName << "]" << std::endl;
+    }
 
     this->startTime = -1.0;  // Will be initialized on first update
+    
+    // Note: We removed the static component check that was causing the error
   }
 
   /// \brief Update the model pose based on the selected pattern
@@ -103,12 +108,20 @@ class PatternMovementPlugin
     
     // Initialize start time on first update
     if (this->startTime < 0) {
+      gzmsg << "PatternMovementPlugin: Initializing start time for model [" 
+            << this->modelName << "] at " << currentTime << std::endl;
       this->startTime = currentTime;
       return;
     }
 
     // Calculate elapsed time since start
     double elapsedTime = currentTime - this->startTime;
+    
+    // Print debug messages periodically
+    if (_info.iterations % 200 == 0) {
+      gzmsg << "PatternMovementPlugin: Moving model [" << this->modelName 
+            << "] at time " << elapsedTime << " seconds" << std::endl;
+    }
     
     // Calculate new pose based on pattern
     math::Pose3d newPose = this->initialPose;
@@ -118,6 +131,11 @@ class PatternMovementPlugin
       // Simple linear movement along x-axis
       double distance = this->linearVel * elapsedTime;
       newPose.Pos().X() = this->initialPose.Pos().X() + distance;
+      
+      if (_info.iterations % 200 == 0) {
+        gzmsg << "PatternMovementPlugin: Linear model [" << this->modelName 
+              << "] moving to X = " << newPose.Pos().X() << std::endl;
+      }
     }
     else if (this->pattern == "circle") {
       // Circular movement in the xy plane
@@ -125,8 +143,15 @@ class PatternMovementPlugin
       newPose.Pos().X() = this->initialPose.Pos().X() + this->radius * cos(angle);
       newPose.Pos().Y() = this->initialPose.Pos().Y() + this->radius * sin(angle);
       
-      // Make the model face the direction of movement
-      newPose.Rot().Euler(0, 0, angle + M_PI/2);
+      // Make the model face the direction of movement - use SetFromEuler instead of deprecated Euler
+      newPose.Rot().SetFromEuler(math::Vector3d(0, 0, angle + M_PI/2));
+      
+      if (_info.iterations % 200 == 0) {
+        gzmsg << "PatternMovementPlugin: Circle model [" << this->modelName 
+              << "] moving to X = " << newPose.Pos().X() 
+              << ", Y = " << newPose.Pos().Y() 
+              << " with angle = " << angle << std::endl;
+      }
     }
     else if (this->pattern == "infinity") {
       // Figure-8 pattern (lemniscate of Bernoulli)
@@ -136,15 +161,37 @@ class PatternMovementPlugin
       newPose.Pos().X() = this->initialPose.Pos().X() + this->radius * cos(t) / denominator;
       newPose.Pos().Y() = this->initialPose.Pos().Y() + this->radius * sin(t) * cos(t) / denominator;
       
-      // Calculate tangent angle for rotation
+      // Calculate tangent angle for rotation - use SetFromEuler instead of deprecated Euler
       double tangentAngle = atan2(cos(t) * cos(2*t), -sin(t));
-      newPose.Rot().Euler(0, 0, tangentAngle);
+      newPose.Rot().SetFromEuler(math::Vector3d(0, 0, tangentAngle));
+      
+      if (_info.iterations % 200 == 0) {
+        gzmsg << "PatternMovementPlugin: Infinity model [" << this->modelName 
+              << "] moving to X = " << newPose.Pos().X() 
+              << ", Y = " << newPose.Pos().Y() << std::endl;
+      }
     }
     
     // Update the model's pose
     auto poseComp = _ecm.Component<components::Pose>(this->model.Entity());
     if (poseComp) {
       _ecm.SetComponentData<components::Pose>(this->model.Entity(), newPose);
+      
+      if (_info.iterations % 200 == 0) {
+        gzmsg << "PatternMovementPlugin: Updated pose for model [" << this->modelName 
+              << "] to " << newPose << std::endl;
+      }
+    }
+    else {
+      if (_info.iterations % 200 == 0) {
+        gzerr << "PatternMovementPlugin: Failed to get pose component for model [" 
+              << this->modelName << "]" << std::endl;
+        
+        // Try to create the pose component if it doesn't exist
+        _ecm.CreateComponent(this->model.Entity(), components::Pose(newPose));
+        gzmsg << "PatternMovementPlugin: Created pose component for model [" 
+              << this->modelName << "]" << std::endl;
+      }
     }
   }
 

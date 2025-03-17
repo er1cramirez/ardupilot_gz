@@ -70,41 +70,41 @@
     <!-- Include Runway Model -->
     <include>
       <uri>model://runway</uri>
-        <pose degrees="true">-29 545 0 0 0 363</pose>
+      <pose degrees="true">-29 545 0 0 0 363</pose>
     </include>
 
     <!-- Include Iris Quadcopter -->
     <include>
       <uri>model://iris_with_gimbal</uri>
-      <n>iris</n>
+      <name>iris</name>
       <pose degrees="true">0 0 0.195 0 0 90</pose>
     </include>
 
     <!-- Include ArUco Marker with Linear Movement -->
     <include>
       <uri>model://aruco_marker_line</uri>
-      <n>aruco_marker_line</n>
+      <name>aruco_marker_line</name>
       <pose>5 0 0.01 0 0 0</pose> <!-- 5m in front of the iris -->
     </include>
 
     <!-- Include ArUco Marker with Circular Movement -->
     <include>
       <uri>model://aruco_marker_circle</uri>
-      <n>aruco_marker_circle</n>
+      <name>aruco_marker_circle</name>
       <pose>-3 3 0.01 0 0 0</pose> <!-- 3m to the left and 3m behind of the iris -->
     </include>
 
     <!-- Include ArUco Marker with Infinity (Figure-8) Movement -->
     <include>
       <uri>model://aruco_marker_infinity</uri>
-      <n>aruco_marker_infinity</n>
+      <name>aruco_marker_infinity</name>
       <pose>0 -5 0.01 0 0 0</pose> <!-- 5m to the right of the iris -->
     </include>
 
     <!-- Include Rover (WildThumper) -->
     <include>
       <uri>model://wildthumper_with_lidar</uri>
-      <n>wildthumper</n>
+      <name>wildthumper</name>
       <pose>3 3 0.15 0 0 0</pose> <!-- 3m away from origin at an angle -->
     </include>
 
