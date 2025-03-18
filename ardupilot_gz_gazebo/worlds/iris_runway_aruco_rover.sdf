@@ -103,7 +103,7 @@
 
     <!-- Include Rover (WildThumper) -->
     <include>
-      <uri>model://wildthumper_with_lidar</uri>
+      <uri>model://wildthumper</uri>
       <name>wildthumper</name>
       <pose>3 3 0.15 0 0 0</pose> <!-- 3m away from origin at an angle -->
     </include>
