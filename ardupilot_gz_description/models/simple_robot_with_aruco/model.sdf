@@ -1,0 +1,197 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="simple_robot_with_aruco">
+    <link name='chassis'>
+      <pose>0 0 0.07 0 0 0</pose>  <!-- Lowered height -->
+      <inertial>
+        <mass>5.0</mass>  <!-- Increased mass for stability -->
+        <inertia>
+          <ixx>0.2</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.25</iyy>
+          <iyz>0</iyz>
+          <izz>0.4</izz>
+        </inertia>
+      </inertial>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>0.5 0.4 0.05</size>  <!-- Thinner chassis -->
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.7 0.7 0.7 1</ambient>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+          <specular>0.7 0.7 0.7 1</specular>
+        </material>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>0.5 0.4 0.05</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Left wheel -->
+    <link name='left_wheel'>
+      <pose relative_to="chassis">-0.15 0.3 0 -1.5707 0 0</pose>  <!-- Wider wheelbase -->
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.043333</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.043333</iyy>
+          <iyz>0</iyz>
+          <izz>0.08</izz>
+        </inertia>
+      </inertial>
+      <visual name='visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.07</radius>  <!-- Smaller wheels -->
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.07</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Right wheel -->
+    <link name='right_wheel'>
+      <pose relative_to="chassis">-0.15 -0.3 0 -1.5707 0 0</pose>  <!-- Wider wheelbase -->
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.043333</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.043333</iyy>
+          <iyz>0</iyz>
+          <izz>0.08</izz>
+        </inertia>
+      </inertial>
+      <visual name='visual'>
+        <geometry>
+          <cylinder>
+            <radius>0.07</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.07</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- ArUco marker link -->
+    <link name="aruco_marker_link">
+      <pose relative_to="chassis">0 0 0.05 0 0 0</pose>
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>0.000001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000001</iyy>
+          <iyz>0</iyz>
+          <izz>0.000001</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.001</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1.0 1.0 1.0 1</ambient>
+          <diffuse>1.0 1.0 1.0 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <pbr>
+            <metal>
+              <albedo_map>materials/textures/aruco_marker.png</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.001</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Joints -->
+    <joint name='left_wheel_joint' type='revolute'>
+      <pose relative_to='left_wheel'/>
+      <parent>chassis</parent>
+      <child>left_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <joint name='right_wheel_joint' type='revolute'>
+      <pose relative_to='right_wheel'/>
+      <parent>chassis</parent>
+      <child>right_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- Fixed joint for ArUco marker -->
+    <joint name="aruco_marker_joint" type="fixed">
+      <parent>chassis</parent>
+      <child>aruco_marker_link</child>
+    </joint>
+
+    <!-- Differential drive plugin -->
+    <plugin
+      filename="gz-sim-diff-drive-system"
+      name="gz::sim::systems::DiffDrive">
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.6</wheel_separation>
+      <wheel_radius>0.07</wheel_radius>
+      <odom_publish_frequency>10</odom_publish_frequency>
+      <topic>cmd_vel</topic>
+    </plugin>
+  </model>
+</sdf>

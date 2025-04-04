@@ -1,0 +1,70 @@
+<?xml version='1.0'?>
+<sdf version='1.9'>
+  <model name='target_aruco'>
+    <!-- Main link (white platform) -->
+    <link name='base_link'>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      
+      <visual name="base_visual">
+        <pose>0 0 0.025 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.05</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>1 1 1 1</specular>
+        </material>
+      </visual>
+      
+      <!-- ArUco marker visual -->
+      <visual name='aruco_visual'>
+        <pose>0 0 0.055 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.2 0.2 0.002</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <pbr>
+            <metal>
+              <albedo_map>materials/textures/aruco_marker.png</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      
+      <collision name='collision'>
+        <pose>0 0 0.025 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.05</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Velocity control plugin -->
+    <plugin
+      filename="gz-sim-velocity-control-system"
+      name="gz::sim::systems::VelocityControl">
+      <initial_linear>0.01 0 0</initial_linear>
+      <initial_angular>0 0 -0.1</initial_angular>
+    </plugin>
+  </model>
+</sdf>
