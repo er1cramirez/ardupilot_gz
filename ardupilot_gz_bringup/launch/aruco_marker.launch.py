@@ -1,5 +1,5 @@
-# aruco_marker.launch.py
 from pathlib import Path
+import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -8,6 +8,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
+    pkg_project_bringup = get_package_share_directory("ardupilot_gz_bringup")
     pkg_project_gazebo = get_package_share_directory("ardupilot_gz_gazebo")
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
 
@@ -29,6 +30,20 @@ def generate_launch_description():
         launch_arguments={"gz_args": "-v4 -g"}.items(),
     )
 
+    # ROS-GZ Bridge - Using os.path.join for proper string concatenation
+    bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        parameters=[
+            {
+                "config_file": os.path.join(
+                    pkg_project_bringup, "config", "aruco_bridge.yaml"
+                ),
+            }
+        ],
+        output="screen",
+    )
+
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -36,5 +51,6 @@ def generate_launch_description():
             ),
             gz_sim_server,
             gz_sim_gui,
+            bridge,
         ]
     )
