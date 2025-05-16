@@ -1,11 +1,12 @@
 <?xml version="1.0" ?>
 <sdf version="1.9">
-  <world name="map">
+  <world name="iris_aruco_world">
     <physics name="1ms" type="ignore">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
 
+    <!-- Standard plugins -->
     <plugin filename="gz-sim-physics-system"
       name="gz::sim::systems::Physics">
     </plugin>
@@ -67,19 +68,48 @@
       <surface_model>EARTH_WGS84</surface_model>
     </spherical_coordinates>
 
-    <include>
-      <uri>model://runway</uri>
-        <pose degrees="true">-29 545 0 0 0 363</pose>
-    </include>
+    <!-- Ground plane -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
 
+    <!-- Include Iris Drone -->
     <include>
       <uri>model://iris_with_camera</uri>
       <name>iris</name>
       <pose degrees="true">0 0 0.195 0 0 90</pose>
     </include>
-    <include>
-      <uri>model://moving_platform</uri>
-    </include>
 
+    <!-- Include Target ArUco Marker -->
+    <include>
+      <uri>model://target_aruco</uri>
+      <name>target_aruco</name>
+      <pose>5 0 0.05 0 0 0</pose>
+    </include>
+    
+    <!-- Instead of using a second ArUco marker, we'll rely on the Python script for movement -->
   </world>
 </sdf>
